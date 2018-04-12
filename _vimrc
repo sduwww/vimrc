@@ -1,4 +1,4 @@
-" =============================================================================
+﻿" =============================================================================
 "        << 判断操作系统是 Windows 还是 Linux 和判断是终端还是 Gvim >>
 " =============================================================================
 
@@ -94,44 +94,62 @@ endif
 " =============================================================================
 "                          << 以下为用户自定义配置 >>
 " =============================================================================
-call plug#begin('~/.vim/vimfiles/bundle')
+if (g:iswindows && g:isGUI)
+    call plug#begin($HOME.'/vimfiles/bundle')
+else
+    call plug#begin($HOME.'/.vim/vimfiles/bundle')
+endif
 
+Plug 'gregsexton/Atom'
+Plug 'joshdick/onedark.vim'
+Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'tomasr/molokai'
+Plug 'morhetz/gruvbox'
+
+Plug 'jsfaint/gen_tags.vim'
+
+Plug 'dyng/ctrlsf.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mattn/emmet-vim'
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'name5566/vim-bookmark'
-Plug 'https://github.com/vim-scripts/a.vim.git'
-Plug 'https://github.com/vim-scripts/AutoComplPop.git'
-Plug 'https://github.com/jiangmiao/auto-pairs.git'
-Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
-Plug 'https://github.com/vim-scripts/DoxygenToolkit.vim.git'
-Plug 'https://github.com/mattn/emmet-vim.git'
-Plug 'https://github.com/jsfaint/gen_tags.vim.git'
-Plug 'https://github.com/morhetz/gruvbox.git'
-Plug 'https://github.com/vim-scripts/Mark--Karkat.git'
-Plug 'https://github.com/vim-scripts/matchit.zip.git'
-Plug 'https://github.com/tomasr/molokai.git'
-Plug 'https://github.com/scrooloose/nerdcommenter.git'
-Plug 'https://github.com/scrooloose/nerdtree.git'
-Plug 'https://github.com/b3niup/numbers.vim.git'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
 
-" Plug 'https://github.com/vim-scripts/OmniCppComplete.git'
-" Plug 'Rip-Rip/clang_complete'
-Plug 'https://github.com/justmao945/vim-clang.git'
+Plug 'b3niup/numbers.vim'
 
-Plug 'https://github.com/vim-scripts/repeat.vim.git'
-Plug 'https://github.com/vim-scripts/std_c.zip.git'
-Plug 'https://github.com/majutsushi/tagbar.git'
-Plug 'https://github.com/mbbill/undotree.git'
-" Plug 'https://github.com/vim-airline/vim-airline.git'
-" Plug 'https://github.com/vim-airline/vim-airline-themes.git'
+Plug 'vim-scripts/OmniCppComplete'
+Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'vim-scripts/Mark--Karkat'
+Plug 'vim-scripts/AutoComplPop'
+Plug 'vim-scripts/matchit.zip'
+Plug 'vim-scripts/repeat.vim'
+Plug 'vim-scripts/std_c.zip'
+Plug 'vim-scripts/ZoomWin'
+Plug 'vim-scripts/a.vim'
+
+Plug 'majutsushi/tagbar'
+
+Plug 'mbbill/undotree'
+
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
 
-Plug 'https://github.com/dkprice/vim-easygrep.git'
-Plug 'https://github.com/tpope/vim-fugitive.git'
-Plug 'https://github.com/terryma/vim-multiple-cursors.git'
-Plug 'https://github.com/honza/vim-snippets.git'
-Plug 'https://github.com/tpope/vim-surround.git'
-Plug 'https://github.com/vim-scripts/ZoomWin.git'
-Plug 'https://github.com/terryma/vim-expand-region.git'
+
+Plug 'dkprice/vim-easygrep'
+
+Plug 'tpope/vim-fugitive'
+
+Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-multiple-cursors'
+
+Plug 'honza/vim-snippets'
+Plug 'tpope/vim-surround'
+Plug 'justmao945/vim-clang'
 call plug#end()
 
 syntax on
@@ -161,7 +179,7 @@ endif
 "------------------------------------------------------------------------------
 "  < 编写文件时的配置 >
 "------------------------------------------------------------------------------
-set showtabline=2
+set showtabline=1
 set nocompatible                                      " 关闭 Vi 兼容模式
 filetype on                                           " 启用文件类型侦测
 filetype plugin on                                    " 针对不同的文件类型加载对应的插件
@@ -238,7 +256,7 @@ noremap H ^
 noremap L $
 
 " ctrl_\竖向分屏
-map <a-s-\> :vs<CR>
+map <c-\> :vs<CR>
 
 set ignorecase                                        "搜索模式里忽略大小写
 set smartcase                                         "如果搜索模式包含大写字符，不使用 'ignorecase' 选项，只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用
@@ -258,17 +276,24 @@ imap <c-l> <Right>
 
 " 保存文件
 nmap <Leader>w :w!<CR>
-"imap wa <ESC>:wall!<CR>a
+" imap <Leader>w <ESC>:w!<CR>a
 vmap <Leader>w <ESC>:w!<CR>
 
 nmap <Leader>wa :wall!<CR>
-"imap wa <ESC>:wall!<CR>a
+" imap <Leader>wa <ESC>:wall!<CR>a
 vmap <Leader>wa <ESC>:wall!<CR>
+
+"设置切换Buffer快捷键"
+nnoremap bn :bn<CR>
+nnoremap bp :bp<CR>
+nnoremap bd :bdelete<CR>  " 关闭当前buffer
 
 if (g:iswindows)
     nmap <Leader>rs :source $HOME/_vimrc<CR>
+    nmap <Leader>e :e $HOME/_vimrc<CR>
 else
     nmap <Leader>rs :source $HOME/.vimrc<CR>
+    nmap <Leader>e :e $HOME/.vimrc<CR>
 endif
 
 "每行超过80个的字符用下划线标示
@@ -277,17 +302,20 @@ endif
 "------------------------------------------------------------------------------
 " < 界面配置 >
 "------------------------------------------------------------------------------
-set guioptions-=T                                     " 隐藏工具栏
+if has('gui_running')
+    au GUIEnter * simalt ~x                              " 窗口启动时自动最大化
+    set guioptions-=e
+    set guioptions-=T                                     " 隐藏工具栏
+    set laststatus=2                                      " 开启状态栏信息
+    "set guifont=BitStream_Vera_Sans_Mono:h11              " 设置字体:字号（字体名称空格用下划线代替）
+    "set guifont=YaHei_Consolas_Hybrid:h11                 " 设置字体:字号（字体名称空格用下划线代替）
+    set guifont=Consolas:h12                               " 设置字体:字号（字体名称空格用下划线代替）
+endif
+set shortmess=atI                                     " 去掉欢迎界面
 set number                                            " 显示行号
-set laststatus=2                                      " 开启状态栏信息
 set cmdheight=1                                       " 设置命令行的高度为2，默认为1
 set cursorline                                        " 突出显示当前行
-"set guifont=BitStream_Vera_Sans_Mono:h11              " 设置字体:字号（字体名称空格用下划线代替）
-"set guifont=YaHei_Consolas_Hybrid:h11                 " 设置字体:字号（字体名称空格用下划线代替）
-set guifont=Consolas:h13                               " 设置字体:字号（字体名称空格用下划线代替）
 set nowrap                                            " 设置不自动换行
-set shortmess=atI                                     " 去掉欢迎界面
-au GUIEnter * simalt ~x                              " 窗口启动时自动最大化
 "winpos 100 20                                         " 指定窗口出现的位置，坐标原点在屏幕左上角
 "set lines=45 columns=120                              " 指定窗口大小，lines为高度，columns为宽度
 syntax enable                                         " 打开语法高亮
@@ -314,11 +342,13 @@ set nocompatible                                      " 关闭兼容模式
 if g:isGUI
     "set background=dark
     "colorscheme darkblue                              "Gvim配色方案
-    colorscheme gruvbox
+    " colorscheme gruvbox
+    colorscheme onedark
 else
     let g:rehash256 = 1
     set background=dark
-    colorscheme gruvbox                               "终端配色方案
+    " colorscheme gruvbox                               "终端配色方案
+    colorscheme onedark                               "终端配色方案
 endif
 
 " 显示/隐藏菜单栏、工具栏、滚动条，可用 Ctrl + F11 切换
@@ -346,7 +376,6 @@ set autochdir                               " 设定文件浏览器目录为当�
 set noswapfile                              " 设置无临时文件
 set vb t_vb=                                " 关闭提示音
 set nocp
-set ofu=syntaxcomplete#Complete
 
 
 " 在不使用 MiniBufExplorer 插件时也可用<C-k,j,h,l>切换到上下左右的窗口中去
@@ -355,7 +384,7 @@ noremap <c-j> <c-w>jzz
 noremap <c-h> <c-w>hzz
 noremap <c-l> <c-w>lzz
 " 关闭当前窗口
-map <silent> <c-w>w :close<cr>
+noremap <c-w>w :close<cr>
 
 " -----------------------------------------------------------------------------
 "  < ZoomWin 插件配置 >
@@ -373,7 +402,7 @@ let g:gen_tags#ctags_auto_gen = 1
 let g:loaded_gentags#gtags = 1
 let g:gen_tags#ctags_opts = '--c++-kinds=+p --fields=+iaS --extra=+q -a'    "ctags增量标签
 let g:gen_tags#ctags_prune = 1  " 增量前删除旧的
-let g:gen_tags#blacklist = ['$HOME']
+" let g:gen_tags#blacklist = ['$HOME']
 "autocmd BufWritePost * :GenCtags
 
 " 用Gtags生成标签
@@ -405,7 +434,7 @@ let g:DoxygenToolkit_returnTag="@Return:  "
 let g:DoxygenToolkit_authorName="sduwww"
 let g:DoxygenToolkit_briefTag_funcName="yes"
 let g:doxygen_enhanced_color=1
-imap /** <ESC>:Dox<cr>
+nmap <Leader>fd <ESC>:Dox<cr>
 
 " -----------------------------------------------------------------------------
 "  < emmet-vim（前身为Zen coding） 插件配置 >
@@ -416,7 +445,7 @@ imap /** <ESC>:Dox<cr>
 "  < undotree 插件配置 >
 " -----------------------------------------------------------------------------
 if has("persistent_undo")
-    set undodir=$HOME.'/.cache/undodir/'
+    set undodir=$HOME.'/.cache/undo_dir/'
     set undofile
 endif
 
@@ -492,48 +521,6 @@ let NERDTreeQuitOnOpen=1
 " ctrl-b 打开文件浏览
 nmap <silent> <c-b> :NERDTreeFind<cr>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-
-" -----------------------------------------------------------------------------
-"  < air-line 插件配置 >
-" -----------------------------------------------------------------------------
-"设置为双字宽显示，否则无法完整显示如:☆
-let g:airline_theme="onedark"
-let g:airline_powerline_fonts = 1
-
- "打开tabline功能,方便查看Buffer和切换,省去了minibufexpl插件
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#exclude_preview = 1
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline#extensions#bufferline#enabled = 1
-
-"设置切换Buffer快捷键"
-nnoremap bn :bn<CR>
-nnoremap bp :bp<CR>
-" 关闭当前buffer
-nnoremap bd :bdelete<CR>
-
-" 关闭状态显示空白符号计数
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#whitespace#symbol = '!'
-
-" 设置consolas字体"前面已经设置过
-set guifont=Consolas\ for\ Powerline\ FixedD:h12
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-" old vim-powerline symbols
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
 
 " -----------------------------------------------------------------------------
 "  < ctrlp.vim 插件配置 >
@@ -711,20 +698,19 @@ let g:lightline = {
 set showtabline=2
 set laststatus=2
 set noshowmode
-let g:lightline#bufferline#show_number  = 1
-let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#show_number  = 0
+let g:lightline#bufferline#shorten_path = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
-let g:lightline#bufferline#number_map = {
-\ 0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄',
-\ 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}
+" let g:lightline#bufferline#number_map = { 0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄', 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}
+let g:lightline                  = {}
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
 
 
-let g:clang_c_options = '-std=gnu11'
-let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
-" let g:clang_diagsopt = ''
+let g:clang_c_options = '-std=gnu11 -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -Wno-visibility'
+let g:clang_cpp_options = '-std=c++11 -stdlib=libc++ -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -Wno-visibility'
+let g:clang_diagsopt = ''
 " =============================================================================
 "                          << 以下为常用自动命令配置 >>
 " =============================================================================
@@ -734,5 +720,9 @@ let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
 " =============================================================================
 "                          << 其它 >>
 " =============================================================================
+" 注：上面配置中的"<Leader>"在本软件中设置为"\"键（引号里的反斜杠），如<Leader>t
+" 指在常规模式下按"\"键加"t"键，这里不是同时按，而是先按"\"键后按"t"键，间隔在一
+" 秒内，而<Leader>cs是先按"\"键再按"c"又再按"s"键；如要修改"<leader>"键，可以把
+" 下面的设置取消注释，并修改双引号中的键为你想要的，如修改为逗号键。
 
 
