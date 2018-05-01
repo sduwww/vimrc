@@ -99,7 +99,7 @@ if (g:iswindows && g:isGUI)
 else
     call plug#begin($HOME.'/.vim/vimfiles/bundle')
 endif
-
+"  主题
 Plug 'gregsexton/Atom'
 Plug 'joshdick/onedark.vim'
 Plug 'kristijanhusak/vim-hybrid-material'
@@ -108,18 +108,19 @@ Plug 'morhetz/gruvbox'
 
 Plug 'jsfaint/gen_tags.vim'
 
-Plug 'dyng/ctrlsf.vim'
-Plug 'jiangmiao/auto-pairs'
+" Plug 'dyng/ctrlsf.vim'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tacahiroy/ctrlp-funky'
+
+Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'name5566/vim-bookmark'
 Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
-
 Plug 'b3niup/numbers.vim'
 
-Plug 'vim-scripts/OmniCppComplete'
+Plug 'scrooloose/nerdtree'
+
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'vim-scripts/Mark--Karkat'
 Plug 'vim-scripts/AutoComplPop'
@@ -139,10 +140,10 @@ Plug 'mbbill/undotree'
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
 
-
 Plug 'dkprice/vim-easygrep'
 
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-multiple-cursors'
@@ -150,6 +151,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'honza/vim-snippets'
 Plug 'tpope/vim-surround'
 Plug 'justmao945/vim-clang'
+
 call plug#end()
 
 syntax on
@@ -229,6 +231,9 @@ nnoremap gj j
 nmap G Gzz
 nmap [[ [[zz
 nmap ]] ]]zz
+
+nmap U <c-u>
+nmap D <c-d>
 nmap <c-u> <c-u>zz
 nmap <c-d> <c-d>zz
 
@@ -243,6 +248,8 @@ vmap <Leader>[ <
 vnoremap < <gv
 vnoremap > >gv
 
+" 复制当前行
+map Y y$
 " 复制选中区到系统剪切板中
 vnoremap <Leader>y "+y
 nmap <Leader>p "+p
@@ -283,6 +290,7 @@ nmap <Leader>wa :wall!<CR>
 " imap <Leader>wa <ESC>:wall!<CR>a
 vmap <Leader>wa <ESC>:wall!<CR>
 
+nmap <Leader>q :q!<CR>
 "设置切换Buffer快捷键"
 nnoremap bn :bn<CR>
 nnoremap bp :bp<CR>
@@ -290,10 +298,10 @@ nnoremap bd :bdelete<CR>  " 关闭当前buffer
 
 if (g:iswindows)
     nmap <Leader>rs :source $HOME/_vimrc<CR>
-    nmap <Leader>e :e $HOME/_vimrc<CR>
+    nmap <Leader>o :e $HOME/_vimrc<CR>
 else
     nmap <Leader>rs :source $HOME/.vimrc<CR>
-    nmap <Leader>e :e $HOME/.vimrc<CR>
+    nmap <Leader>o :e $HOME/.vimrc<CR>
 endif
 
 "每行超过80个的字符用下划线标示
@@ -369,13 +377,7 @@ endif
 "------------------------------------------------------------------------------
 "  < 其它配置 >
 "------------------------------------------------------------------------------
-set noundofile
-set nowb
-set nobackup                                " 设置无备份文件
-set autochdir                               " 设定文件浏览器目录为当前目录
-set noswapfile                              " 设置无临时文件
-set vb t_vb=                                " 关闭提示音
-set nocp
+
 
 
 " 在不使用 MiniBufExplorer 插件时也可用<C-k,j,h,l>切换到上下左右的窗口中去
@@ -384,7 +386,7 @@ noremap <c-j> <c-w>jzz
 noremap <c-h> <c-w>hzz
 noremap <c-l> <c-w>lzz
 " 关闭当前窗口
-noremap <c-w>w :close<cr>
+noremap <c-w> :close<cr>
 
 " -----------------------------------------------------------------------------
 "  < ZoomWin 插件配置 >
@@ -395,6 +397,11 @@ noremap <c-w>w :close<cr>
 " -----------------------------------------------------------------------------
 "  < gen_tags 配置 >
 " -----------------------------------------------------------------------------
+if (g:iswindows)
+    let g:gen_tags#ctags_bin = $HOME.'/bin/ctags.exe'
+else
+    let g:gen_tags#ctags_bin = '/usr/bin/ctags'
+endif
 let g:gen_tags#use_cache_dir = 1
 let g:gen_tags#verbose=0
 " 用Ctags生成标签
@@ -457,25 +464,24 @@ let g:undotree_ShortIndicators=1
     " nmap <buffer> J <plug>UndotreeGoNextState
     " nmap <buffer> K <plug>UndotreeGoPreviousState
 " endfunc
-map <c-z>z :UndotreeToggle<cr>
+nmap <Leader>z :UndotreeToggle<cr>
 
 " -----------------------------------------------------------------------------
 "  < numbers 插件配置 >
 " -----------------------------------------------------------------------------
 " nnoremap tn :NumbersToggle<CR> 		" 切换行号显示模式
-
 " -----------------------------------------------------------------------------
 "  < omnicppcomplete 插件配置 >
 " -----------------------------------------------------------------------------
-set completeopt=menu,menuone
-let OmniCpp_MayCompleteDot=1        " 打开  . 操作符
-let OmniCpp_MayCompleteArrow=1      " 打开 -> 操作符
-let OmniCpp_MayCompleteScope=1      " 打开 :: 操作符
-let OmniCpp_NamespaceSearch=1       " 打开命名空间
-let OmniCpp_GlobalScopeSearch=1
-let OmniCpp_DefaultNamespace=["std"]
-let OmniCpp_ShowPrototypeInAbbr=1   " 打开显示函数原型
-let OmniCpp_SelectFirstItem = 2     " 自动弹出时自动跳至第一个
+" set completeopt=menu,menuone
+" let OmniCpp_MayCompleteDot=1        " 打开  . 操作符
+" let OmniCpp_MayCompleteArrow=1      " 打开 -> 操作符
+" let OmniCpp_MayCompleteScope=1      " 打开 :: 操作符
+" let OmniCpp_NamespaceSearch=1       " 打开命名空间
+" let OmniCpp_GlobalScopeSearch=1
+" let OmniCpp_DefaultNamespace=["std"]
+" let OmniCpp_ShowPrototypeInAbbr=1   " 打开显示函数原型
+" let OmniCpp_SelectFirstItem = 2     " 自动弹出时自动跳至第一个
 
 " -----------------------------------------------------------------------------
 "  < surround 插件配置 >
@@ -519,16 +525,23 @@ let NERDTreeShowBookmarks=1
 let NERDTreeQuitOnOpen=1
 
 " ctrl-b 打开文件浏览
-nmap <silent> <c-b> :NERDTreeFind<cr>
+map <silent> <c-b> :NERDTreeFind<cr>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " -----------------------------------------------------------------------------
 "  < ctrlp.vim 插件配置 >
 " -----------------------------------------------------------------------------
 " 一个全路径模糊文件，缓冲区，最近最多使用，... 检索插件；详细帮助见 :h ctrlp
-" 常规模式下输入：Ctrl + p 调用插件
 
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_map = '<Leader>p'
+let g:ctrlp_cmd = 'CtrlP'
 
+let g:ctrlp_max_height = 20
+let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
+
+nnoremap <Leader>f :CtrlpFunky<CR>
+let g:ctrlp_extensions = ['funky']
 " -----------------------------------------------------------------------------
 "  < tagbar 插件配置 >
 " -----------------------------------------------------------------------------
@@ -536,9 +549,14 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " 相对 TagList 能更好的支持面向对象
 " 常规模式下输入 ctrl - r 调用插件，如果有打开 TagList 窗口则先将其关闭
-nmap <c-r> :TagbarOpenAutoClose<CR>
+nmap <silent> <c-r> :TagbarOpenAutoClose<CR>
 
-let g:tagbar_ctags_bin='/usr/bin/ctags'
+if (g:iswindows)
+    let g:tagbar_ctags_bin = $HOME.'/bin/ctags.exe'
+else
+    let g:tagbar_ctags_bin = '/usr/bin/ctags'
+endif
+
 let g:tagbar_width=30                       "设置窗口宽度
 let g:tagbar_left=1                         "在左侧窗口中显示
 let g:tagbar_autofocus=1
@@ -638,6 +656,7 @@ vmap <Leader>c <plug>NERDCommenterInvert
 " -----------------------------------------------------------------------------
 " 主要用"."命令来重复上次插件使用的命令
 
+
 " -----------------------------------------------------------------------------
 "  < std_c 插件配置 >
 " -----------------------------------------------------------------------------
@@ -668,7 +687,7 @@ let g:multi_cursor_use_default_mapping=0
 
 " user mapping
 let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_prev_key='<C-m>'
+let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 
@@ -685,10 +704,11 @@ map __ <Plug>(expand_region_shrink)
 "  < lightline and lightline-buffer 插件配置 >
 " -----------------------------------------------------------------------------
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'one',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ ['lineinfo'], ['percent'] ]
       \ },
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head'
@@ -698,31 +718,49 @@ let g:lightline = {
 set showtabline=2
 set laststatus=2
 set noshowmode
-let g:lightline#bufferline#show_number  = 0
+let g:lightline#bufferline#show_number  = 1
 let g:lightline#bufferline#shorten_path = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
-" let g:lightline#bufferline#number_map = { 0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄', 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}
-let g:lightline                  = {}
+let g:lightline#bufferline#number_map = { 0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄', 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
 
-
+" -----------------------------------------------------------------------------
+"  <vim-clang 插件配置 >
+" ----------------------------------------------------------------------------- 
+if (g:iswindows)
+    let g:clang_exec = $HOME.'\bin\clang.exe'
+endif
 let g:clang_c_options = '-std=gnu11 -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -Wno-visibility'
 let g:clang_cpp_options = '-std=c++11 -stdlib=libc++ -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -Wno-visibility'
 let g:clang_diagsopt = ''
+
+" -----------------------------------------------------------------------------
+"  <gitgutter 插件配置 >
+" ----------------------------------------------------------------------------- 
+let g:gitgutter_map_keys = 0
+if exists('&signcolumn')  " Vim 7.4.2201
+  set signcolumn=yes
+else
+  let g:gitgutter_sign_column_always = 1
+endif
+let g:gitgutter_max_signs = 5000  " default value
 " =============================================================================
 "                          << 以下为常用自动命令配置 >>
 " =============================================================================
-
+set noundofile
+set nowb
+set nobackup                                " 设置无备份文件
+set autochdir                               " 设定文件浏览器目录为当前目录
+set noswapfile                              " 设置无临时文件
+set vb t_vb=                                " 关闭提示音
+set nocp
 
 
 " =============================================================================
 "                          << 其它 >>
 " =============================================================================
-" 注：上面配置中的"<Leader>"在本软件中设置为"\"键（引号里的反斜杠），如<Leader>t
-" 指在常规模式下按"\"键加"t"键，这里不是同时按，而是先按"\"键后按"t"键，间隔在一
-" 秒内，而<Leader>cs是先按"\"键再按"c"又再按"s"键；如要修改"<leader>"键，可以把
-" 下面的设置取消注释，并修改双引号中的键为你想要的，如修改为逗号键。
+
 
 
